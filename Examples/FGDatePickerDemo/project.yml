@@ -1,0 +1,36 @@
+name: FGDatePickerDemo
+options:
+  bundleIdPrefix: com.fengur
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+packages:
+  FGDatePicker:
+    path: ../..
+
+targets:
+  FGDatePickerDemo:
+    type: application
+    platform: iOS
+    dependencies:
+      - package: FGDatePicker
+    info:
+      path: FGDatePickerDemo/Info.plist
+      properties:
+        CFBundleName: FGDatePickerDemo
+        CFBundleShortVersionString: "1.0.0"
+        UILaunchScreen:
+          UIColorName: ""
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    sources:
+      - path: FGDatePickerDemo
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "1,2"
