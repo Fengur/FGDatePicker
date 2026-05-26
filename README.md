@@ -1,29 +1,27 @@
 # FGDatePicker
+> English | [中文](README_CN.md)
 
-iOS 上**轻量、纯代码、零依赖**的日期选择弹窗组件，对系统 `UIDatePicker` 做
-modal 风格包装：
+A **lightweight, code-only, zero-dependency** date picker modal for iOS, wrapping the system `UIDatePicker` in a modal-style presentation:
 
-- 半透明遮罩 + 居中卡片（slide-up 进场动画）
-- 配置可定制：mode / locale / 时区 / 最早最晚日期 / 按钮文案 / 主题色
-- closure 与 `async/await` 双 API
-- 跟随系统 `light/dark`，也可强制单一外观
-- iOS 16+，纯 Swift，**不依赖 SnapKit / Auto Layout**——内部全用 frame
-  布局 + `layoutSubviews` 重排
+- Semi-transparent backdrop + centered card (slide-up entry animation)
+- Configurable: mode / locale / time zone / min & max dates / button titles / theme color
+- Both `closure` and `async/await` APIs
+- Follows system `light/dark` mode; can also force a single appearance
+- iOS 16+, pure Swift, **no SnapKit / Auto Layout** — layout is entirely frame-based + `layoutSubviews` recalculation
 
-> 这个仓库是 2015 年 OC 老项目 `UWDatePicker` 的彻底翻新。原版 OC 实现已经
-> 整体替换，xib / delegate `String` 回传 / 颜色硬编码等过时做法全部丢弃。
+> This repo is a complete rewrite of `UWDatePicker`, a 2015 Objective-C project. The original OC implementation has been replaced wholesale; xib files, delegate-based `String` callbacks, and hardcoded colors have all been dropped.
 
-## 安装
+## Installation
 
-### Swift Package Manager（推荐）
+### Swift Package Manager (recommended)
 
-`Xcode → File → Add Packages...` 输入：
+In Xcode: `File → Add Packages...` and enter:
 
 ```
 https://github.com/Fengur/FGDatePicker
 ```
 
-或者在自己的 `Package.swift` 里：
+Or in your own `Package.swift`:
 
 ```swift
 .package(url: "https://github.com/Fengur/FGDatePicker", from: "1.0.0")
@@ -35,21 +33,21 @@ https://github.com/Fengur/FGDatePicker
 pod 'FGDatePicker', '~> 1.0'
 ```
 
-### 手动
+### Manual
 
-直接拖 `Sources/FGDatePicker/` 下的三个 `.swift` 文件进项目即可，零依赖。
+Drag the three `.swift` files from `Sources/FGDatePicker/` into your project. Zero dependencies.
 
-## 30 秒上手
+## 30-Second Quick Start
 
 ```swift
 import FGDatePicker
 
-// closure 风格
+// Closure style
 FGDatePicker.present(in: view) { date in
     print("user picked: \(date)")
 }
 
-// async/await 风格
+// async/await style
 Task {
     if let date = await FGDatePicker.pick(in: view) {
         print("user picked: \(date)")
@@ -57,14 +55,14 @@ Task {
 }
 ```
 
-## 完整 API
+## Full API
 
 ```swift
 public final class FGDatePicker: UIView {
 
-    // MARK: 主入口
+    // MARK: Primary entry points
 
-    /// closure 风格：弹出后通过 onConfirm/onCancel 回调
+    /// Closure style: present the picker; result delivered via onConfirm/onCancel
     @discardableResult
     public static func present(
         in host: UIView,
@@ -73,20 +71,20 @@ public final class FGDatePicker: UIView {
         onCancel: (() -> Void)? = nil
     ) -> FGDatePicker
 
-    /// async/await 风格：confirm 返回 Date，cancel 或点击背景返回 nil
+    /// async/await style: confirm returns Date, cancel or backdrop tap returns nil
     public static func pick(
         in host: UIView,
         configuration: Configuration = .init()
     ) async -> Date?
 
-    // MARK: 直接构造
+    // MARK: Direct construction
 
     public init(configuration: Configuration = .init())
 
-    /// 替换当前配置
+    /// Replace the current configuration
     public func update(configuration newValue: Configuration)
 
-    /// 暴露内嵌的 UIDatePicker，需要细调（设置 calendar 等）时直接用
+    /// Exposes the embedded UIDatePicker for fine-grained access (e.g. setting calendar)
     public let datePicker: UIDatePicker
 }
 ```
@@ -114,16 +112,16 @@ public struct Configuration {
 
 ```swift
 public enum Theme {
-    case system     // 跟随系统
-    case light      // 强制亮色
-    case dark       // 强制暗色
-    case custom(Palette)  // 完全自定义
+    case system     // follows system appearance
+    case light      // force light mode
+    case dark       // force dark mode
+    case custom(Palette)  // fully custom
 }
 ```
 
-`Palette` 控制 backdrop 颜色、卡片背景、圆角、按钮颜色与圆角、分隔线颜色。
+`Palette` controls backdrop color, card background, corner radius, button color & corner radius, and separator color.
 
-## 使用例：自定义主题 + 限定日期范围
+## Example: Custom Theme + Date Range
 
 ```swift
 var config = FGDatePicker.Configuration()
@@ -144,23 +142,23 @@ FGDatePicker.present(in: view, configuration: config) { date in
 }
 ```
 
-## 跑一下 Demo
+## Running the Demo
 
 ```bash
 cd Examples/FGDatePickerDemo
-xcodegen generate                       # 生成 .xcodeproj（需要 brew install xcodegen）
+xcodegen generate                       # generate .xcodeproj (requires: brew install xcodegen)
 open FGDatePickerDemo.xcodeproj
-# Xcode 内选 iPhone 17 Pro 模拟器，⌘R 跑
+# Select iPhone 17 Pro Simulator in Xcode, press ⌘R
 ```
 
-Demo 里有 4 个按钮，分别演示：
+The demo has 4 buttons demonstrating:
 
-1. 默认配置（dateAndTime + wheels + system theme）
-2. 仅日期 + dark 主题
-3. async/await 风格
-4. 自定义 min/max + 自定义 palette（粉色按钮）
+1. Default configuration (dateAndTime + wheels + system theme)
+2. Date-only + dark theme
+3. async/await style
+4. Custom min/max + custom palette (pink button)
 
-## 测试
+## Tests
 
 ```bash
 xcodebuild test \
@@ -169,28 +167,22 @@ xcodebuild test \
   -skipPackagePluginValidation
 ```
 
-10 个单元测试覆盖 Configuration 默认值、Theme 解析、控件构造、layout 几何
-关系。
+10 unit tests covering Configuration defaults, Theme resolution, control construction, and layout geometry.
 
-## 路线图
+## Roadmap
 
-- [x] v1.0：核心 modal 选择 + closure / async API + 主题
-- [ ] v1.1：日期区间选择（同时选 start + end）
-- [ ] v1.2：内嵌（inline）模式——直接放进自己的 view 而不是 modal
-- [ ] v1.3：Combine publisher API
-- [ ] v1.4：自定义动画（spring / 自定义 transition）
+- [x] v1.0: core modal picker + closure / async API + theming
+- [ ] v1.1: date range selection (pick start + end simultaneously)
+- [ ] v1.2: inline mode — embed directly in a view instead of modal
+- [ ] v1.3: Combine publisher API
+- [ ] v1.4: custom animations (spring / custom transition)
 
-## 设计取舍记录
+## Design Notes
 
-**为什么用 frame 布局而不是 Auto Layout / SnapKit**：项目作者偏好直接对
-布局精确控制，frame 布局对这种容器组件足够清晰；旋转/不同屏幕尺寸通过
-`layoutSubviews()` 重新计算覆盖。详见
-[`feedback_ios_frame_layout.md`](https://github.com/Fengur/FGDatePicker)（项目
-内部决策记录）。
+**Why frame layout instead of Auto Layout / SnapKit**: the author prefers direct, precise layout control; frame layout is clear enough for a container component like this. Rotation and different screen sizes are handled by recalculating in `layoutSubviews()`.
 
-**为什么不写 SwiftUI 版本**：SwiftUI 已经有原生 `DatePicker`，包装意义
-不大；本库针对的是 UIKit 项目里需要 modal 形式呈现 UIDatePicker 的场景。
+**Why no SwiftUI version**: SwiftUI already has a native `DatePicker`; wrapping it adds little value. This library targets UIKit projects that need to present `UIDatePicker` in a modal style.
 
 ## License
 
-MIT —— 见 [LICENSE](./LICENSE)。
+MIT — see [LICENSE](./LICENSE).
